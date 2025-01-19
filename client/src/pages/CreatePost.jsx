@@ -1,12 +1,10 @@
 import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-
-// import { usePollinationsImage } from '@pollinations/react';
-
 import { preview } from '../assets/'
 import { getRandomPrompt } from '../utils'
 import { FormField, Loader } from '../components'
 
+import { usePollinationsImage } from '@pollinations/react';
 
 const CreatePost = () => {
 
@@ -22,6 +20,16 @@ const CreatePost = () => {
     const [generatingImg, setGeneratingImg] = useState(false)
     const [loading, setLoading] = useState(false)
 
+    const getImageUrl = usePollinationsImage(
+        form.prompt,
+        {
+            width: 720,
+            height: 720,
+            seed: Math.floor(Math.random() * 100),
+            model: 'flux'
+        }
+    );
+
     const generateImg = () => {
 
     }
@@ -30,16 +38,22 @@ const CreatePost = () => {
 
     }
     const handleChange = (e) => {
+        const { name, value } = e.target
+        setForm({ ...form, [name]: value })
     }
+
     const handleSurpriseMe = () => {
-    }
+        const randomPrompt = getRandomPrompt();
+        // const imgUrl = getImageUrl; photo: imgUrl
+        setForm({ ...form, prompt: randomPrompt});
+    };
 
     return (
         <section className='
         mx-auto bg-transparent h-5/6 p-5 
         md:w-3/4 md:mx-auto  md:grid md:grid-cols-1 
-        lg:w-1/4 lg:mx-auto lg:grid lg:grid-cols-1
-        lg:mt-10
+        lg:w-3/4 lg:mx-auto lg:grid lg:grid-cols-1lg:mt-10
+        sm:w-3/4 sm:mx-auto sm:grid sm:grid-cols-1 sm:mt-10 
         backdrop-blur-2xl  bg-white bg-opacity-25 rounded-[1rem]  shadow-xl 
         '>
             <div>
@@ -62,7 +76,7 @@ const CreatePost = () => {
                     />
                     <FormField
                         labelName="Prompt"
-                        type="text"
+                        type="textarea"
                         name="prompt"
                         placeholder="An Impressionist oil painting of sunflowers in a purple vase…"
                         value={form.prompt}
@@ -105,6 +119,14 @@ const CreatePost = () => {
 }
 
 export default CreatePost
+
+
+
+
+
+
+
+
 
 // const item = [
 //     {

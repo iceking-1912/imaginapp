@@ -10,5 +10,3 @@ export function getRandomPrompt(prompt) {
 
     return randomPrompt
 }
-
-console.log(getRandomPrompt(''))
