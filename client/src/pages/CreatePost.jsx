@@ -30,13 +30,63 @@ const CreatePost = () => {
         }
     );
 
-    const generateImg = () => {
+    const generateImg = async () => {
+        if (form.prompt) {
+            try {
+                setGeneratingImg(true);
+                const response = await fetch('http://localhost:3000/fetch-image', {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    params: {
+                        prompt: form.prompt,
+                        width: 720,
+                        height: 720,
+                        model: 'flux',
+                        seed: Math.floor(Math.random() * 100),
+                    },
+                });
 
-    }
+                const data = await response.json();
+                setForm({ ...form, photo: data.imageUrl });
+            } catch (error) {
+                console.error('Error generating image:', error);
+            } finally {
+                setGeneratingImg(false);
+            }
+        } else {
+            alert('Please provide a prompt');
+        }
+    };
 
-    const handleSubmit = () => {
+    const handleSubmit = async (e) => {
+        e.preventDefault();
 
-    }
+        if (form.name && form.prompt && form.photo) {
+            setLoading(true);
+
+            try {
+                const response = await fetch('http://localhost:3000/store-data', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(form),
+                });
+
+                await response.json();
+                navigate('/');
+            } catch (error) {
+                console.error('Error storing data:', error);
+            } finally {
+                setLoading(false);
+            }
+        } else {
+            alert('Please fill out all fields');
+        }
+    };
+
     const handleChange = (e) => {
         const { name, value } = e.target
         setForm({ ...form, [name]: value })
@@ -141,9 +191,7 @@ export default CreatePost
 
 // const [prompt, setPrompt] = useState("")
 
-// // const [imageUrl, setImageUrl] = useState("")
-
-// const imageUrl = usePollinationsImage(prompt, {
+// // const [imageUrl, setImageUrl] = usePollinationsImage(prompt, {
 //     width: item[0].width,
 //     height: item[0].height,
 //     seed: item[0].seed,

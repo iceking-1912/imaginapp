@@ -1,29 +1,16 @@
+const axios = require('axios');
+const fs = require('fs');
 
+async function downloadImage(prompt, width = 768, height = 768, model = 'flux', seed = null) {
+    const url = `https://image.pollinations.ai/prompt/${prompt}?width=${width}&height=${height}&model=${model}&seed=${seed}`;
 
-import fs from "node:fs";
-import axios from "axios";
-import FormData from "form-data";
-
-const payload = {
-    prompt: "Lighthouse on a cliff overlooking the ocean",
-    output_format: "webp"
-};
-
-const response = await axios.postForm(
-    `https://api.stability.ai/v2beta/stable-image/generate/core`,
-    axios.toFormData(payload, new FormData()),
-    {
-        validateStatus: undefined,
-        responseType: "arraybuffer",
-        headers: {
-            Authorization: `Bearer sk-24B4tZxHanELgAFO2mNssT0B2r3WSUAEoL1NPp3KQU8u3WqT`,
-            Accept: "image/*"
-        },
-    },
-);
-
-if (response.status === 200) {
-    fs.writeFileSync("./lighthouse.webp", Buffer.from(response.data));
-} else {
-    throw new Error(`${response.status}: ${response.data.toString()}`);
+    try {
+        const response = await axios.get(url, { responseType: 'arraybuffer' });
+        fs.writeFileSync('generated_image.jpg', response.data);
+        console.log('Image downloaded!');
+    } catch (error) {
+        console.error('Error downloading the image:', error);
+    }
 }
+
+downloadImage("A beautiful sunset over the ocean", 1280, 720, 'flux', 42,"");
