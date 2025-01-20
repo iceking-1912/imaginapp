@@ -45,7 +45,7 @@ const CreatePost = () => {
                         height: 720,
                         model: 'flux',
                         seed: Math.floor(Math.random() * 100),
-                    },
+                    },X
                 });
 
                 const data = await response.json();
@@ -101,9 +101,9 @@ const CreatePost = () => {
     return (
         <section className='
         mx-auto bg-transparent h-5/6 p-5 
-        md:w-3/4 md:mx-auto  md:grid md:grid-cols-1 
-        lg:w-3/4 lg:mx-auto lg:grid lg:grid-cols-1lg:mt-10
         sm:w-3/4 sm:mx-auto sm:grid sm:grid-cols-1 sm:mt-10 
+        md:w-3/4 md:mx-auto  md:grid md:grid-cols-1 
+        lg:w-2/4 lg:mx-auto lg:grid lg:grid-cols-1lg:mt-10
         backdrop-blur-2xl  bg-white bg-opacity-25 rounded-[1rem]  shadow-xl 
         '>
             <div>

@@ -1,55 +1,28 @@
-const express = require('express');
-const mongoose = require('mongoose');
-const Pollinations = require('pollinations');
 
-const app = express();
-const port = 3000;
+// Node.js code example for downloading an image
+// For more details, visit: https://github.com/pollinations/pollinations/blob/master/APIDOCS.md
 
-app.use(express.json());
+import fs from 'fs';
+import fetch from 'node-fetch';
 
-mongoose.connect('mongodb://localhost:27017/imaginapp', {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-});
+async function downloadImage(imageUrl) {
+  // Fetching the image from the URL
+  const response = await fetch(imageUrl);
+  // Reading the response as a buffer
+  const buffer = await response.buffer();
+  // Writing the buffer to a file named 'image.png'
+  fs.writeFileSync('image.png', buffer);
+  // Logging completion message
+  console.log('Download Completed');
+}
 
-const postSchema = new mongoose.Schema({
-  name: String,
-  prompt: String,
-  photo: String,
-});
+// Image details
+const prompt = '';
+const width = 512;
+const height = 512;
+const seed = 60733; // Each seed generates a new image variation
+const model = 'flux'; // Using 'flux' as default if model is not provided
 
-const Post = mongoose.model('Post', postSchema);
+const imageUrl = `https://pollinations.ai/p/${encodeURIComponent(prompt)}?width=${width}&height=${height}&seed=${seed}&model=${model}`;
 
-app.get('/fetch-image', async (req, res) => {
-  const { prompt, width, height, model, seed } = req.query;
-
-  try {
-    const imageUrl = await Pollinations.generateImage(prompt, {
-      width: parseInt(width),
-      height: parseInt(height),
-      model,
-      seed: parseInt(seed),
-    });
-
-    res.json({ imageUrl });
-  } catch (error) {
-    res.status(500).json({ error: 'Failed to fetch image from Pollinations API' });
-  }
-});
-
-app.post('/store-data', async (req, res) => {
-  const { name, prompt, photo } = req.body;
-
-  try {
-    const newPost = new Post({ name, prompt, photo });
-    await newPost.save();
-
-    res.status(201).json(newPost);
-  } catch (error) {
-    res.status(500).json({ error: 'Failed to store data in MongoDB' });
-  }
-});
-
-app.listen(port, () => {
-  console.log(`Server is running on http://localhost:${port}`);
-});
+downloadImage(imageUrl);
