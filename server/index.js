@@ -1,28 +1,109 @@
 
-// Node.js code example for downloading an image
-// For more details, visit: https://github.com/pollinations/pollinations/blob/master/APIDOCS.md
+// import express from 'express';
+
+// const app = express();
+
+// app.get('/fetch-image', async (req, res) => {
+//   try {
+//     const response = await hf.textToImage({
+//       model: 'black-forest-labs/FLUX.1-dev',
+//       inputs: 'a picture of a green bird'
+//     });
+//     const buffer = await response.buffer();
+
+//     const filePath = `./local-images/${Date.now()}.png`;
+//     fs.writeFileSync(filePath, buffer);
+
+//     res.json({ imageUrl: filePath });
+//   } catch (error) {
+//     console.error('Fetch image error:', error);
+//     res.status(500).json({ error: 'Failed to fetch image.' });
+//   }
+// });
+
+
+import { HfInference } from '@huggingface/inference'
 
 import fs from 'fs';
-import fetch from 'node-fetch';
 
-async function downloadImage(imageUrl) {
-  // Fetching the image from the URL
-  const response = await fetch(imageUrl);
-  // Reading the response as a buffer
-  const buffer = await response.buffer();
-  // Writing the buffer to a file named 'image.png'
-  fs.writeFileSync('image.png', buffer);
-  // Logging completion message
-  console.log('Download Completed');
+const hf = new HfInference('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')
+
+// for await (const aiop of ailib.textGenerationStream({
+//   model: "google/gemma-2-2b-it",
+//   inputs: "a mermaid swimming gracefully in an underwater city, surrounded by coral reefs and sea creatures",
+//   parameters: {
+//     max_new_tokens: 100,
+//     temperature: 0.7,
+//   },
+// })) {
+//   console.log(aiop.generated_text);
+// }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// async function query(data) {
+//   const response = await fetch(
+//     "https://api-inference.huggingface.co/models/stabilityai/stable-diffusion-3-medium-diffusers",
+//     {
+//       headers: {
+//         Authorization: "Bearer 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",
+//         "Content-Type": "application/json",
+//       },
+//       method: "POST",
+//       body: JSON.stringify(data),
+//     }
+//   );
+//   const result = await response.blob();
+//   return result;
+// }
+
+
+
+
+// query({
+//   "inputs": "a carnival with colorful rides and games, the air filled with laughter and music"
+// }).then((response) => {
+//   response.arrayBuffer().then((arrayBuffer) => {
+//     const buffer = Buffer.from(arrayBuffer);
+//     const filePath = `./local-images/${Date.now()}.png`;
+//     fs.mkdirSync('./local-images', { recursive: true });
+//     fs.writeFileSync(filePath, buffer);
+//   });
+// });
+
+
+
+const response = await hf.textToImage({
+  model: 'black-forest-labs/FLUX.1-dev',
+  inputs: 'a magical portal opening to another dimension, swirling with vibrant colors and energy make it landscape and deatailed with vaporwave astetic'
+});
+
+if (!response) {
+  console.log
+    ('No response from textToImage API');
 }
 
-// Image details
-const prompt = '';
-const width = 512;
-const height = 512;
-const seed = 60733; // Each seed generates a new image variation
-const model = 'flux'; // Using 'flux' as default if model is not provided
+const arrayBuffer = await response.arrayBuffer();
+if (!arrayBuffer) {
+  console.log('Failed to convert response to arrayBuffer');
+}
 
-const imageUrl = `https://pollinations.ai/p/${encodeURIComponent(prompt)}?width=${width}&height=${height}&seed=${seed}&model=${model}`;
+const buffer = Buffer.from(arrayBuffer);
+const filePath = `./local-images/${Date.now()}.png`;
 
-downloadImage(imageUrl);
+fs.mkdirSync('./local-images', { recursive: true });
+fs.writeFileSync(filePath, buffer);
+
