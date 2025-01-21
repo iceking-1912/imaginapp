@@ -54,7 +54,9 @@ const CreatePost = () => {
         md:w-3/4 md:mx-auto  md:grid md:grid-cols-1 
         lg:w-3/4 lg:mx-auto lg:grid lg:grid-cols-1lg:mt-10
         sm:w-3/4 sm:mx-auto sm:grid sm:grid-cols-1 sm:mt-10 
-        backdrop-blur-2xl  bg-white bg-opacity-25 rounded-[1rem]  shadow-xl 
+        shadow-2xl
+        backdrop-blur-2xl  bg-white bg-opacity-25 rounded-[1rem]  
+        shadow-[0_65px_65px_-5px_rgba(0,0,0,0.8)]
         '>
             <div>
                 <h1 className="font-extrabold mb-2 text-black text-4xl">Create Aglaia Pix</h1>
@@ -62,7 +64,7 @@ const CreatePost = () => {
                 </p>
             </div>
 
-            <form className=' w-fill mt-10  ' onSubmit={handleSubmit}>
+            <form className=' w-fill m1-2  ' onSubmit={handleSubmit}>
                 <div className="flex flex-col gap-5 ">
                     <FormField
                         labelName="Your Name"
@@ -85,7 +87,8 @@ const CreatePost = () => {
                         handleSurpriseMe={handleSurpriseMe}
                     />
 
-                    <div className='relative w-full bg-grey-50 border border-gray-300 rounded-lg text-sm focus:ring-blue-500 focus:border-blue-500 h-64 p-2 flex items-center justify-center '>
+                    <div className='relative w-full bg-grey-50 border border-gray-300 rounded-lg text-sm focus:ring-blue-500 focus:border-blue-500 h-64 p-2 flex items-center justify-center
+                    lg:h-128 '>
                         {form.photo ? (
                             <img src={form.photo} alt={form.prompt} className='w-full h-full object-cover rounded-lg' />
                         ) : (
