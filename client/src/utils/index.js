@@ -1,6 +1,6 @@
 import { surpriseMePrompts } from '../constants/index.js';
 
-export function getRandomPrompt(prompt) {
+const getRandomPrompt = (prompt) => {
     const randomIndex = Math.floor(Math.random() * surpriseMePrompts.length)
     const randomPrompt = surpriseMePrompts[randomIndex]
 
@@ -12,4 +12,4 @@ export function getRandomPrompt(prompt) {
 }
 
 
-console.log(getRandomPrompt("hi"))
+export default getRandomPrompt;

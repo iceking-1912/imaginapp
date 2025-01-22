@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { preview } from '../assets/'
-import { getRandomPrompt } from '../utils'
+import getRandomPrompt from '../utils'
 import { FormField, Loader } from '../components'
 
 import { usePollinationsImage } from '@pollinations/react';
@@ -31,32 +31,32 @@ const CreatePost = () => {
     );
 
     const generateImg = async () => {
-        if (form.prompt) {
-            try {
-                setGeneratingImg(true);
-                const response = await fetch('http://localhost:3000/fetch-image', {
-                    method: 'GET',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    params: {
-                        prompt: form.prompt,
-                        width: 720,
-                        height: 720,
-                        model: 'flux',
-                        seed: Math.floor(Math.random() * 100),
-                    },X
-                });
-
-                const data = await response.json();
-                setForm({ ...form, photo: data.imageUrl });
-            } catch (error) {
-                console.error('Error generating image:', error);
-            } finally {
-                setGeneratingImg(false);
-            }
-        } else {
+        if (!form.prompt) {
             alert('Please provide a prompt');
+            return;
+        }
+        try {
+            setGeneratingImg(true);
+            const response = await fetch('http://localhost:3000/fetch-image', {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                params: {
+                    prompt: form.prompt,
+                    width: 720,
+                    height: 720,
+                    model: 'flux',
+                    seed: Math.floor(Math.random() * 100),
+                },
+            });
+
+            const data = await response.json();
+            setForm({ ...form, photo: data.imageUrl });
+        } catch (error) {
+            console.error('Error generating image:', error);
+        } finally {
+            setGeneratingImg(false);
         }
     };
 

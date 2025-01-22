@@ -22,7 +22,7 @@ const hf = new HfInference(process.env.HF_TOKEN)
 const model = "ghoskno/Color-Canny-Controlnet-model"
 
 
-const prompt = `make it a high teck spying machine targetted on Narco Criminals with vaporwave asthetic and better anotomy and more detailed and more colorful` 
+const prompt = `make it a high teck spying machine targetted on Narco Criminals with vaporwave asthetic and better anotomy and more detailed and more colorful`
 
 try {
     const newImageBlob = await hf.imageToImage({
@@ -31,7 +31,7 @@ try {
         parameters: {
             prompt: prompt,
             negative_prompt: "Black and white photo. text, bad anatomy, blurry, low quality",
-        // Between 0 and 1
+            // Between 0 and 1
             strength: 0.65,
         }
     });
