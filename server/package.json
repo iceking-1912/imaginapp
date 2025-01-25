@@ -2,6 +2,7 @@
   "dependencies": {
     "@huggingface/inference": "^3.0.0",
     "@runwayml/sdk": "^1.4.4",
+    "@types/punycode": "^2.1.4",
     "axios": "^1.7.9",
     "cloudinary": "^2.5.1",
     "cors": "^2.8.5",
@@ -10,8 +11,10 @@
     "mongoose": "^8.9.5",
     "mongose": "^0.0.2-security",
     "nodemon": "^3.1.9",
+    "nvm": "^0.0.4",
     "openai": "^4.79.3",
-    "pollinations": "^1.0.4"
+    "pollinations": "^1.0.4",
+    "sharp": "^0.33.5"
   },
   "name": "server",
   "version": "1.0.0",

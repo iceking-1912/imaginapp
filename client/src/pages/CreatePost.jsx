@@ -1,7 +1,7 @@
-import React, { useState } from 'react'
+import React, { useRef, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { preview } from '../assets/'
-import getRandomPrompt from '../utils'
+import { getRandomPrompt } from '../utils'
 import { FormField, Loader } from '../components'
 
 import { usePollinationsImage } from '@pollinations/react';
@@ -12,23 +12,22 @@ const CreatePost = () => {
     const navigate = useNavigate()
 
     const [form, setForm] = useState({
-        name: '',
-        prompt: '',
-        photo: ''
+        name: '', prompt: '', photo: '',
     })
 
     const [generatingImg, setGeneratingImg] = useState(false)
     const [loading, setLoading] = useState(false)
+    const [dospecify, changespecify] = useState(true)
 
-    const getImageUrl = usePollinationsImage(
-        form.prompt,
-        {
-            width: 720,
-            height: 720,
-            seed: Math.floor(Math.random() * 100),
-            model: 'flux'
-        }
-    );
+    // const getImageUrl = usePollinationsImage(
+    //     form.prompt,
+    //     {
+    //         width: 720,
+    //         height: 720,
+    //         seed: Math.floor(Math.random() * 100),
+    //         model: 'flux'
+    //     }
+    // );
 
     const generateImg = async () => {
         if (!form.prompt) {
@@ -37,45 +36,52 @@ const CreatePost = () => {
         }
         try {
             setGeneratingImg(true);
-            const response = await fetch('http://localhost:3000/fetch-image', {
-                method: 'GET',
-                headers: {
+            const response = await fetch('http://localhost:8090/api/v1/hf/', {
+                method: 'POST', headers: {
                     'Content-Type': 'application/json',
-                },
-                params: {
-                    prompt: form.prompt,
-                    width: 720,
-                    height: 720,
-                    model: 'flux',
-                    seed: Math.floor(Math.random() * 100),
-                },
+                }, body: JSON.stringify({ prompt: form.prompt })
             });
 
             const data = await response.json();
-            setForm({ ...form, photo: data.imageUrl });
+            // setForm({ ...form, photo: `data.image/png;base64,${data.image.image}` });
+
+            if (data.image) {
+                // setForm({ ...form, photo: `data:image/png;base64,${data.image}` });
+
+                setForm({ ...form, photo: `${data.image}` });
+            } else {
+                console.error('No image data received');
+            }
+
         } catch (error) {
             console.error('Error generating image:', error);
         } finally {
-            setGeneratingImg(false);
+            setTimeout(() => {
+
+                setGeneratingImg(false);
+            }, 2000);
         }
     };
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
+    const handleSubmit = async () => {
+    // e.preventDefault();
 
         if (form.name && form.prompt && form.photo) {
             setLoading(true);
 
-            try {
-                const response = await fetch('http://localhost:3000/store-data', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(form),
-                });
+            const myHeaders = new Headers();
+            myHeaders.append("Content-Type", "application/json");
 
-                await response.json();
+
+            const requestOptions = {
+                method: "POST",
+                headers: myHeaders,
+                body: JSON.stringify(form),
+            };
+            try {
+                const response = await fetch("http://localhost:8090/api/v1/post", requestOptions);
+            // const response = await response.json();
+            // alert(`Success: ${response.data._id}`);
                 navigate('/');
             } catch (error) {
                 console.error('Error storing data:', error);
@@ -87,6 +93,7 @@ const CreatePost = () => {
         }
     };
 
+
     const handleChange = (e) => {
         const { name, value } = e.target
         setForm({ ...form, [name]: value })
@@ -94,88 +101,101 @@ const CreatePost = () => {
 
     const handleSurpriseMe = () => {
         const randomPrompt = getRandomPrompt();
-        // const imgUrl = getImageUrl; photo: imgUrl
-        setForm({ ...form, prompt: randomPrompt});
+        setForm({ ...form, prompt: randomPrompt });
     };
 
     return (
-        <section className='
-        mx-auto bg-transparent h-5/6 p-5 
-        sm:w-3/4 sm:mx-auto sm:grid sm:grid-cols-1 sm:mt-10 
-        md:w-3/4 md:mx-auto  md:grid md:grid-cols-1 
-        lg:w-2/4 lg:mx-auto lg:grid lg:grid-cols-1lg:mt-10
-        backdrop-blur-2xl  bg-white bg-opacity-25 rounded-[1rem]  shadow-xl 
-        '>
-            <div>
-                <h1 className="font-extrabold mb-2 text-black text-4xl">Create Aglaia Pix</h1>
-                <p className="text-gray-600 text-lg">Create stunning and imaginative images generated by AI, and showcase your creativity to the world.
-                </p>
-            </div>
+        <section
+            className=' h-fill mx-auto bg-transparent p-5'>
+            <div className=" p-5
+  grid grid-flow-col
+    sm:w-11/12  sm:mx-auto sm:flex sm:flex-col sm:mt-10
+    md:w-11/12 md:mx-auto md:flex md:flex-col
+    lg:w-11/12  lg:mx-auto lg:flex lg:flex-row lg:mt-10
+        backdrop-blur-lg  bg-white bg-opacity-25 rounded-[1rem]  shadow-xl">
 
-            <form className=' w-fill mt-10  ' onSubmit={handleSubmit}>
-                <div className="flex flex-col gap-5 ">
-                    <FormField
-                        labelName="Your Name"
-                        type="text"
-                        name="name"
-                        placeholder="FrostKnight"
-                        value={form.name}
-                        handleChange={handleChange}
-                        doWhat="Save"
-
-                    />
-                    <FormField
-                        labelName="Prompt"
-                        type="textarea"
-                        name="prompt"
-                        placeholder="An Impressionist oil painting of sunflowers in a purple vase…"
-                        value={form.prompt}
-                        handleChange={handleChange}
-                        isSurpriseMe
-                        handleSurpriseMe={handleSurpriseMe}
-                    />
-
-                    <div className='relative w-full bg-grey-50 border border-gray-300 rounded-lg text-sm focus:ring-blue-500 focus:border-blue-500 h-64 p-2 flex items-center justify-center '>
-                        {form.photo ? (
-                            <img src={form.photo} alt={form.prompt} className='w-full h-full object-cover rounded-lg' />
-                        ) : (
-                            <img src={preview} alt="preview" className='h-64 object-cover opacity-50 ' />
-                        )}
-                        {generatingImg && (
-                            <div className='absolute inset-0 bg-black bg-[rgba(0,0,0,0.5)] flex items-center justify-center rounded-lg'>
-                                <Loader />
-                            </div>
-                        )}
+                <div className=' w-8/12 '>
+                    <div>
+                        <h1 className="font-extrabold mb-2 text-black text-4xl">Create Aglaia Pix</h1>
+                        <p className="text-gray-900 text-lg">Create stunning and imaginative images generated by AI, and
+                            showcase your creativity to the world.
+                        </p>
                     </div>
+                    <form className=' flex-shrink w-fill mt-10  ' onSubmit={handleSubmit}>
+                        <div className="flex flex-col gap-5  ">
+                            <FormField
+                                labelName="Your Name"
+                                type="text"
+                                name="name"
+                                placeholder="FrostKnight"
+                                value={form.name}
+                                handleChange={handleChange}
+                                doWhat="submit"
+                            />
+                            <FormField
+                                labelName="Prompt"
+                                type="textarea"
+                                name="prompt"
+                                placeholder="An Impressionist oil painting of sunflowers in a purple vase…"
+                                value={form.prompt}
+                                handleChange={handleChange}
+                                isSurpriseMe
+                                handleSurpriseMe={handleSurpriseMe}
+                                dospecify
+                            />
+                            <button className='bg-[#4b51ff]  hover:bg-[#3239ff] active:bg-[black] text-white px-4 py-2 rounded-md' onClick={() => changespecify(!dospecify)}>
+                                Image Specification
+                            </button>
+                        </div>
+                        <div className='mt-auto mb-5 flex gap-5'>
+                            <button
+                                type='button'
+                                onClick={generateImg}
+                                className='mt-3 w-full font-semibold text-[#150dff] px-5 rounded-[5px] bg-gray-200 active:bg-[#48ff00] active:text-black hover:bg-black hover:text-white py-2'>
+                                {generatingImg ? "Generating..." : "Generate"}
+                            </button>
+                        </div>
+                    </form>
                 </div>
-                <div className='mt-5 flex gap-5'>
-                    <button
-                        type='button'
-                        onClick={generateImg}
-                        className='mt-5 w-full font-semibold text-[#150dff] px-5 rounded-[5px] bg-gray-200 active:bg-[#48ff00] active:text-black hover:bg-black hover:text-white py-2'>
-                        {generatingImg ? "Generating..." : "Generate"}
-                    </button>
+                <div className=" w-full h-full ">
+                    <div className="lg:pl-8  flex flex-col ">
+                        <div
+                            className=' h-fit max-h-fill  relative bg-grey-50 border border-gray-300 rounded-lg text-sm focus:ring-blue-500 focus:border-blue-500 p-2 flex items-center justify-center'
+                        >
+                            {form.photo ? (<img
+                                src={form.photo}
+                                alt={form.prompt}
+                                // className='max-w-fill max-h-fill'
+                                className=' mx-auto max-h-h-fit object-contain rounded-lg'
+                            />) : (<img
+                                src={preview}
+                                alt="preview"
+                                    className='mx-auto object-contain opacity-50'
+                            />)}
+                            {generatingImg && (<div
+                                className='absolute inset-0 bg-black bg-[rgba(0,0,0,0.5)] flex items-center justify-center rounded-lg'>
+                                <Loader />
+                            </div>)}
+                        </div>
+                        <div className='mt-auto'>
+                            <div className='mt-5 text-xs text-center'>
+                                <p>Created a stunning masterpiece? Share it with the Community!</p>
+                            </div>
+                            <button
+                                className='mt-3 text-orange-600 font-bold w-full h-10 bg-black px-5 rounded-[5px] active:bg-[#48ff00] active:text-black hover:bg-black hover:text-white py-2'
+                                onClick={handleSubmit}>
+                                Share with The Community!
+                            </button>
+                        </div>
+                    </div>
+
                 </div>
-                <div className='mt-5  text-center '>
-                    <p>Created a stunning masterpiece? Share it with the Community!</p>
-                </div>
-                <button
-                    className='mt-3  text-orange-600 font-bold w-full h-10 bg-black px-5 rounded-[5px] active:bg-[#48ff00] active:text-black hover:bg-black hover:text-white py-2' to="/" onClick={() => navigate('/')}>
-                    Share with The Community!
-                </button>
-            </form>
+            </div>
         </section>
     )
 }
 
 export default CreatePost
-
-
-
-
-
-
-
 
 
 // const item = [

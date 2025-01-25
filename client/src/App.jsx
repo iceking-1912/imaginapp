@@ -8,7 +8,7 @@ import CreatePost from './pages/CreatePost.jsx'
 
 
 const App = () => (
-  <BrowserRouter><div className=' flex flex-col justify-center bg-hero-img-sm  bg-cover bg-center'>
+  <BrowserRouter><div className=' flex flex-col justify-center h-full bg-cover bg-center'>
 
     <header className="w-full flex justify-between items-center bg-black sm:px-8 px-4 py-4 ">
       <Link to="/">
@@ -17,16 +17,14 @@ const App = () => (
 
       <Link to="/create-post" className="font-medium bg-[#0008ff] text-white px-4 py-2 rounded-md">Create</Link>
     </header>
-    <main className=" w-full  min-h-[calc(100vh-71px)]
-        ">
-      {/* ss:bg-hero-img  */}
+    <main className=" w-full bg-hero-img bg-cover h-100vh">
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/create-post" element={<CreatePost />} />
         {/* <Route path="/generated-image" element={<GeneratedImageComponent />} /> */}
       </Routes>
     </main>
-          </div>
+  </div>
   </BrowserRouter>
 );
 

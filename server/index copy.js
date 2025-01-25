@@ -39,14 +39,6 @@
 
 
 
-
-
-
-
-
-
-
-
 // async function query(data) {
 //   const response = await fetch(
 //     "https://api-inference.huggingface.co/models/stabilityai/stable-diffusion-3-medium-diffusers",
@@ -203,34 +195,34 @@
 import { HfInference } from '@huggingface/inference';
 import fs from 'fs';
 import dotenv from 'dotenv';
-import mongoose from 'mongoose';
-import { getRandomValues } from 'crypto';
+// import mongoose from 'mongoose';
+// import { getRandomValues } from 'crypto';
 
 dotenv.config();
 
 // Connect to MongoDB
-mongoose.connect(process.env.MONGODB_URI, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-});
+// mongoose.connect(process.env.MONGODB_URI, {
+//   useNewUrlParser: true,
+//   useUnifiedTopology: true,
+// });
 
-const db = mongoose.connection;
-db.on('error', console.error.bind(console, 'connection error:'));
-db.once('open', () => {
-  console.log('Connected to MongoDB');
-});
+// const db = mongoose.connection;
+// db.on('error', console.error.bind(console, 'connection error:'));
+// db.once('open', () => {
+//   console.log('Connected to MongoDB');
+// });
 
-const imageSchema = new mongoose.Schema({
-  prompt: String,
-  imagePath: String,
-  createdAt: { type: Date, default: Date.now },
-});
+// const imageSchema = new mongoose.Schema({
+//   prompt: String,
+//   imagePath: String,
+//   createdAt: { type: Date, default: Date.now },
+// });
 
-const Image = mongoose.model('Image', imageSchema);
+// const Image = mongoose.model('Image', imageSchema);
 
 const hf = new HfInference(process.env.HF_TOKEN);
 
-const ranPro = 'a space explorer discovering a new alien planet with strange flora and fauna';
+const ranPro = 'a futuristic city with towering skyscrapers and flying vehicles zipping through the air';
 
 if (!ranPro) {
   console.error('No response from textToImage API');
@@ -261,8 +253,8 @@ async function generateImageFromText(prompt) {
 
     // Save to MongoDB
 
-    
-    console.log("Image data saved to MongoDB");
+
+    // console.log("Image data saved to MongoDB");
   } catch (error) {
     console.error('Error in textToImage:', error);
   }
