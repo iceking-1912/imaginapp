@@ -4,10 +4,10 @@ import { Loader, Card, FormField } from '../components/'
 import CreatePost from './CreatePost'
 
 
-const RenderCards = ({ data, title }) => {
+const RenderCards = ({ data, title }) => {{
   if (data.length > 0) {
     return data.map((post) =>
-      <div className='flex flex-col p-1'>
+      <div className='p-2'>
         <Card key={post._id} {...post} />
       </div>
     )
@@ -15,7 +15,7 @@ const RenderCards = ({ data, title }) => {
     return (<h2 className='font-bold text-[#150dff] text-xl uppercase'>{title}</h2>)
   }
 }
-
+}
 const Home = () => {
 
   const [loading, setLoading] = useState(false)
@@ -80,9 +80,9 @@ const Home = () => {
                 <RenderCards data={[]} title='No Results Found' />
               ) : (
                 // <RenderCards data={allPosts} title='NaBro' />
-                <div>
+                    <div className='grid-row-7 w-full '>
                   {allPosts.length > 0 ? (
-                    <RenderCards data={allPosts} /> // Pass data to Card component
+                        <RenderCards className="row-span-1"  data={allPosts} /> // Pass data to Card component
                   ) : (
                     <p>Hie</p>
                   )}

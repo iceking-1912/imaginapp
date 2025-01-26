@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react'
+import React, { useRef, useState, useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { preview } from '../assets/'
 import { getRandomPrompt } from '../utils'
@@ -16,12 +16,18 @@ const CreatePost = () => {
             name: '',
             prompt: '',
             photo: '',
+            width: 0,
+            height: 0,
+            seed: Math.floor(Math.random() * 100000000000)
         };
     });
 
     const [generatingImg, setGeneratingImg] = useState(false)
     const [loading, setLoading] = useState(false)
     const [dospecify, changespecify] = useState(true)
+
+
+
 
     // const getImageUrl = usePollinationsImage(
     //     form.prompt,
@@ -33,6 +39,14 @@ const CreatePost = () => {
     //     }
     // );
 
+    const [photoURL, setphotoURL] = useState("")
+    useEffect(() => {
+        const photo = JSON.parse(localStorage.getItem('formData'))?.photo
+        setphotoURL(photo);
+
+
+    }, []);
+
     const generateImg = async () => {
         if (!form.prompt) {
             alert('Please provide a prompt');
@@ -43,7 +57,7 @@ const CreatePost = () => {
             const response = await fetch('http://localhost:8090/api/v1/hf/', {
                 method: 'POST', headers: {
                     'Content-Type': 'application/json',
-                }, body: JSON.stringify({ prompt: form.prompt })
+                }, body: JSON.stringify({ prompt: form.prompt,width: form.width , height:form.height, seed:form.seed })
             });
 
             const data = await response.json();
@@ -52,6 +66,7 @@ const CreatePost = () => {
             if (data.image) {
                 // setForm({ ...form, photo: `data:image/png;base64,${data.image}` });
                 localStorage.setItem("formData", JSON.stringify({ ...form, photo: data.image }));
+
                 setForm({ ...form, photo: `${data.image}` });
             } else {
                 console.error('No image data received');
@@ -99,10 +114,21 @@ const CreatePost = () => {
 
 
     const handleChange = (e) => {
-        const { name, value } = e.target
+        const { id, value } = e.target
 
-        localStorage.setItem("formData", JSON.stringify({ ...form, name: value }));
-        setForm({ ...form, [name]: value })
+        localStorage.setItem("formData", JSON.stringify({
+            ...form, [id]: id === "width" && value > 2160 ? 2160 :
+                id === "height" && value > 2160 ? 2160 :
+                    id === "seed" && value > 100000000000 ? 100000000000 :
+                        value
+        }));
+        setForm({
+            ...form,
+            [id]: id === "width" && value > 3840 ? 3840 :
+                id === "height" && value > 2160 ? 2160 :
+                    id === "seed" && value > 100000000000 ? 100000000000 :
+                        value
+        })
     }
 
     const handleSurpriseMe = () => {
@@ -113,7 +139,8 @@ const CreatePost = () => {
 
     return (
         <section
-            className=' mx-auto bg-transparent p-5'>
+            style={{ backgroundImage: `url(${photoURL})` }}
+            className=' mx-auto bg-cover p-5'>
             <div className=" p-5 h-fill
 
       sm:w-11/12 sm:mx-auto sm:mt-10
@@ -131,6 +158,7 @@ const CreatePost = () => {
                     <form className=' flex-shrink w-fill mt-10  ' onSubmit={handleSubmit}>
                         <div className="flex flex-col gap-5  ">
                             <FormField
+                                prompt
                                 labelName="Your Name"
                                 type="text"
                                 name="name"
@@ -140,6 +168,7 @@ const CreatePost = () => {
                                 doWhat="submit"
                             />
                             <FormField
+                                prompt
                                 labelName="Prompt"
                                 type="textarea"
                                 name="prompt"
@@ -148,11 +177,25 @@ const CreatePost = () => {
                                 handleChange={handleChange}
                                 isSurpriseMe
                                 handleSurpriseMe={handleSurpriseMe}
-                                dospecify
                             />
-                            <button className='bg-[#151dff]  hover: active:bg-[black] text-white px-4 py-2 rounded-md' onClick={() => changespecify(!dospecify)}>
+                            <FormField
+                                // labelName="Prompt"
+                                // type="textarea"
+                                // name="prompt"
+                                // prompt
+                                // placeholder="An Impressionist oil painting of sunflowers in a purple vase…"
+                                // value={form.prompt}
+                                handleChange={handleChange}
+                                // isSurpriseMe
+                                // handleSurpriseMe={handleSurpriseMe}
+                                dospecify
+                                width={form.width}
+                                height={form.height}
+                                seed={form.seed}
+                            />
+                            {/* <button className='bg-[#151dff]  hover: active:bg-[black] text-white px-4 py-2 rounded-md' onClick={() => changespecify(!dospecify)}>
                                 Image Specification
-                            </button>
+                            </button> */}
                         </div>
                         <div className='mt-auto mb-5 flex gap-5'>
                             <button

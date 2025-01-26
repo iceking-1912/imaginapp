@@ -16,7 +16,7 @@ router.route('/').get((req, res) => {
     res.send('Hugging Face API Route is working');
 });
 
-async function generateImageFromText(promptsp) {
+async function generateImageFromText(promptsp, width, height, seed) {
     try {
         console.log("fetching image");
 
@@ -70,17 +70,17 @@ async function generateImageFromText(promptsp) {
 
 
         // const prompt = 'From the dazzling expanse of glistening ice caps to the deep...';
-        const width = 1920;
-        const height = 1080;
-        const seed = 42; // Each seed generates a new image variation
+        // const width = 1920;
+        // const height = 1080;
+        // const seed = 42; // Each seed generates a new image variation
         const model = 'flux'; // Using 'flux' as default if model is not provided
-
+        // const model = 'turbo'
 
 
 
         const imageUrl = `https://pollinations.ai/p/${encodeURIComponent(prompt)}?width=${width}&height=${height}&seed=${seed}&model=${model}&nologo=true`;
 
-        const imgdata = await downloadImage(imageUrl, promptsp);
+        // const imgdata = await downloadImage(imageUrl, promptsp);
 
         return imageUrl;
         // Read the stored image and convert to base64
@@ -134,9 +134,9 @@ async function generateImageFromText(promptsp) {
 
 router.route('/').post(async (req, res) => {
     try {
-        const { prompt } = req.body;
+        const { prompt, width, height, seed } = req.body;
 
-        const img = await generateImageFromText(prompt);
+        const img = await generateImageFromText(prompt, width, height, seed);
 
         res.status(200).json({ image: img });
     } catch (error) {

@@ -46,7 +46,7 @@ function AppContent() {
 
   return (
     <div
-      style={{ backgroundImage: `url(${imgURL})` }}
+
       className='flex flex-col justify-center h-full bg-cover'>
       <header className="w-full flex justify-between items-center bg-black sm:px-8 px-4 py-4">
         <Link to="/">
