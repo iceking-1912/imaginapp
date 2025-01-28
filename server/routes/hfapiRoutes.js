@@ -16,7 +16,7 @@ router.route('/').get((req, res) => {
     res.send('Hugging Face API Route is working');
 });
 
-async function generateImageFromText(promptsp) {
+async function generateImageFromText(promptsp, width, height, seed) {
     try {
         console.log("fetching image");
 
@@ -70,9 +70,9 @@ async function generateImageFromText(promptsp) {
 
 
         // const prompt = 'From the dazzling expanse of glistening ice caps to the deep...';
-        const width = 1920;
-        const height = 1080;
-        const seed = 42; // Each seed generates a new image variation
+        // const width = 1920;
+        // const height = 1080;
+        // const seed = 42; // Each seed generates a new image variation
         const model = 'flux'; // Using 'flux' as default if model is not provided
 
 
@@ -80,29 +80,32 @@ async function generateImageFromText(promptsp) {
 
         const imageUrl = `https://pollinations.ai/p/${encodeURIComponent(prompt)}?width=${width}&height=${height}&seed=${seed}&model=${model}&nologo=true`;
 
-        const imgdata = await downloadImage(imageUrl, promptsp);
+        // const imgdata = await downloadImage(imageUrl, promptsp);
 
         return imageUrl;
+        
         // Read the stored image and convert to base64
 
-        // const response = await hf.textToImage({
-        //     // provider: "replicate",
-        //     model: "black-forest-labs/Flux.1-dev",
-        //     inputs: prompt,
-        //     parameters: {
-        //         width: 2160,            // Higher resolution for better quality
-        //         height: 1440,
-        //         guidance_scale: 7.5,    // Balance prompt adherence
-        //         num_inference_steps: 50 // More steps for refinement
-        //     }
-        // });
+        const response = await hf.textToImage({
+            // provider: "replicate",
 
-        // if (!response) {
-        //     console.error('No response from textToImage API');
-        //     return;
-        // }
+            // model: "black-forest-labs/Flux.1-dev",
+            model: "stabilityai/stable-diffusion-2",
+            inputs: prompt,
+            parameters: {
+                width: 1440,            // Higher resolution for better quality
+                height: 2160,
+                guidance_scale: 5.5,    // Balance prompt adherence
+                num_inference_steps: 50 // More steps for refinement
+            }
+        });
 
-        // console.log("Response received:", response);
+        if (!response) {
+            console.error('No response from textToImage API');
+            return;
+        }
+
+        console.log("Response received:", response);
 
         // try {
         //     const arrayBuffer = await response.arrayBuffer();
@@ -115,18 +118,18 @@ async function generateImageFromText(promptsp) {
         // } catch (error) {
         //     console.error('Error saving image:', error);
         // }
-        // const bytes = await response.arrayBuffer();
-        // if (!bytes) {
-        //     console.error('Error in textToImage: No bytes received');
-        //     return;
-        // }
-        // const base64 = Buffer.from(bytes).toString('base64');
+        const bytes = await response.arrayBuffer();
+        if (!bytes) {
+            console.error('Error in textToImage: No bytes received');
+            return;
+        }
+        const base64 = Buffer.from(bytes).toString('base64');
 
-        // if (!base64) {
-        //     console.error('Error in textToImage: No base64 string generated');
-        //     return
-        // }
-        // return base64
+        if (!base64) {
+            console.error('Error in textToImage: No base64 string generated');
+            return
+        }
+        return base64
     } catch (error) {
         console.error('Error in textToImage:', error);
     }
@@ -134,9 +137,9 @@ async function generateImageFromText(promptsp) {
 
 router.route('/').post(async (req, res) => {
     try {
-        const { prompt } = req.body;
+        const { prompt, width, height, seed } = req.body;
 
-        const img = await generateImageFromText(prompt);
+        const img = await generateImageFromText(prompt, width, height, seed);
 
         res.status(200).json({ image: img });
     } catch (error) {
