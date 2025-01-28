@@ -26,27 +26,21 @@ const CreatePost = () => {
     const [loading, setLoading] = useState(false)
     const [dospecify, changespecify] = useState(true)
 
+// const getImageUrl = usePollinationsImage(
+//     form.prompt,
+//     {
+//         width: 720,
+//         height: 720,
+//         seed: Math.floor(Math.random() * 100),
+//         model: 'flux'
+//     }
+// );
 
-
-
-    // const getImageUrl = usePollinationsImage(
-    //     form.prompt,
-    //     {
-    //         width: 720,
-    //         height: 720,
-    //         seed: Math.floor(Math.random() * 100),
-    //         model: 'flux'
-    //     }
-    // );
-
-    const [photoURL, setphotoURL] = useState("")
-    useEffect(() => {
-        const photo = JSON.parse(localStorage.getItem('formData'))?.photo
-        setphotoURL(photo);
-
-
-    }, []);
-
+const [photoURL, setphotoURL] = useState("")
+useEffect(() => {
+    const photo = JSON.parse(localStorage.getItem('formData'))?.photo
+    setphotoURL(photo);
+}, []);
     const generateImg = async () => {
         if (!form.prompt) {
             alert('Please provide a prompt');
@@ -142,7 +136,6 @@ const CreatePost = () => {
             style={{ backgroundImage: `url(${photoURL})` }}
             className=' mx-auto bg-cover p-5'>
             <div className=" p-5 h-fill
-
       sm:w-11/12 sm:mx-auto sm:mt-10
   md:w-11/12 md:mx-auto
   lg:w-11/12 lg:mx-auto  lg:grid  lg:grid-cols-12 lg:gap-4 lg:mt-10
@@ -246,67 +239,3 @@ const CreatePost = () => {
 export default CreatePost
 
 
-// const item = [
-//     {
-//         // prompt: "a whimsical treehouse village nestled in the treetops, connected by rope bridges and ladders",
-//         width: 720,
-//         height: 1280,
-//         seed: 43,
-//         model: "flux"
-//     },
-// ];
-
-
-// const [prompt, setPrompt] = useState("")
-
-// // const [imageUrl, setImageUrl] = usePollinationsImage(prompt, {
-//     width: item[0].width,
-//     height: item[0].height,
-//     seed: item[0].seed,
-//     model: item[0].model
-// })
-
-// const handleSubmit = (e) => {
-//     e.preventDefault()
-//     setLoading(true)
-//     setGeneratingImg(false)
-//     setLoading(false)
-// }
-
-// const items = [
-//     {
-//         prompt: "a whimsical treehouse village nestled in the treetops, connected by rope bridges and ladders",
-//         width: 720,
-//         height: 1280,
-//         seed: 43,
-//         model: "flux"
-//     },
-//     {
-//         prompt: "a group of astronauts exploring a distant galaxy, marveling at the wonders of the universet",
-//         width: 720,
-//         height: 1280,
-//         seed: 44,
-//         model: "flux"
-//     }, {
-//         prompt: "a fantasy kingdom with a majestic castle perched on a hill, overlooking the realm",
-//         width: 720,
-//         height: 1280,
-//         seed: 43,
-//         model: 'flux'
-//     }, {
-//         prompt: "a robot chef meticulously preparing a gourmet meal in a high-tech kitchen with advanced appliances",
-//         width: 720,
-//         height: 1280,
-//         seed: 43,
-//         model: 'flux'
-//     },
-//     {
-//         prompt: "A futuristic city with flying cars and neon lights",
-//         width: 1980,
-//         height: 1020,
-//         seed: 44,
-//         model: 'flux',
-//     }
-// ];
-
-// const [displayItems, setDisplayItems] = useState([])
