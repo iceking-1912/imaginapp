@@ -74,7 +74,7 @@ async function generateImageFromText(promptsp, width, height, seed) {
         // const height = 1080;
         // const seed = 42; // Each seed generates a new image variation
         const model = 'flux'; // Using 'flux' as default if model is not provided
-        // const model = 'turbo'
+
 
 
 
@@ -83,26 +83,29 @@ async function generateImageFromText(promptsp, width, height, seed) {
         // const imgdata = await downloadImage(imageUrl, promptsp);
 
         return imageUrl;
+        
         // Read the stored image and convert to base64
 
-        // const response = await hf.textToImage({
-        //     // provider: "replicate",
-        //     model: "black-forest-labs/Flux.1-dev",
-        //     inputs: prompt,
-        //     parameters: {
-        //         width: 2160,            // Higher resolution for better quality
-        //         height: 1440,
-        //         guidance_scale: 7.5,    // Balance prompt adherence
-        //         num_inference_steps: 50 // More steps for refinement
-        //     }
-        // });
+        const response = await hf.textToImage({
+            // provider: "replicate",
 
-        // if (!response) {
-        //     console.error('No response from textToImage API');
-        //     return;
-        // }
+            // model: "black-forest-labs/Flux.1-dev",
+            model: "stabilityai/stable-diffusion-2",
+            inputs: prompt,
+            parameters: {
+                width: 1440,            // Higher resolution for better quality
+                height: 2160,
+                guidance_scale: 5.5,    // Balance prompt adherence
+                num_inference_steps: 50 // More steps for refinement
+            }
+        });
 
-        // console.log("Response received:", response);
+        if (!response) {
+            console.error('No response from textToImage API');
+            return;
+        }
+
+        console.log("Response received:", response);
 
         // try {
         //     const arrayBuffer = await response.arrayBuffer();
@@ -115,18 +118,18 @@ async function generateImageFromText(promptsp, width, height, seed) {
         // } catch (error) {
         //     console.error('Error saving image:', error);
         // }
-        // const bytes = await response.arrayBuffer();
-        // if (!bytes) {
-        //     console.error('Error in textToImage: No bytes received');
-        //     return;
-        // }
-        // const base64 = Buffer.from(bytes).toString('base64');
+        const bytes = await response.arrayBuffer();
+        if (!bytes) {
+            console.error('Error in textToImage: No bytes received');
+            return;
+        }
+        const base64 = Buffer.from(bytes).toString('base64');
 
-        // if (!base64) {
-        //     console.error('Error in textToImage: No base64 string generated');
-        //     return
-        // }
-        // return base64
+        if (!base64) {
+            console.error('Error in textToImage: No base64 string generated');
+            return
+        }
+        return base64
     } catch (error) {
         console.error('Error in textToImage:', error);
     }

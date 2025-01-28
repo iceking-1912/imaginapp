@@ -11,23 +11,23 @@ const Card = ({ _id, name, prompt, photo }) => {
     }
     return (
         <div
-            className='flex flex-row group relative shadow-card hover:shadow-cardhover card
-            transition duration-500 ease-in-out transform hover:-translate-y-1 hover:scale-105'>
+            className=' relative p-2 rounded-xl group shadow-card hover:shadow-cardhover card  
+            transition duration-500 ease-in-out transform hover:-translate-y-1 hover:scale-100'>
             <img
-                className='rounded-xl w-fit h-fit object-cover'
+                className='w-full h-full object-cover rounded-xl '
                 src={photo}
                 alt={prompt}
             />
-            <div className='group-hover:flex flex-cool max-h-[94.5%]
-            hidden absolute bottom-0 right-0 left-0 bg-[#0F121F] m-2 p-2
+
+            <div className='group-hover:flex flex-col max-h-[70.5%] overflow-hidden
+            hidden absolute bottom-0 right-0 left-0 bg-[#0F121F] m-4 p-2
             rounded-md  '>
 
                 <div className=' grid grid-row-2' >
 
-                    <p className='text-sky-100 text-xs sm:text-sm md:text-base overflow-y-auto ' >{prompt}</p>
+                    <p className='text-white text-xs sm:text-sm md:text-base overflow-y-auto ' >{prompt}</p>
 
                     <div className='mt-5 flex justify-between items-center gap-2 '>
-
 
                         <div className=' w-8 h-8 flex items-center justify-center gap-2 rounded-full bg-orange-700 object-cover '>
                             <div>
@@ -40,10 +40,6 @@ const Card = ({ _id, name, prompt, photo }) => {
                         </button>
 
                     </div>
-
-
-
-
 
                 </div>
 

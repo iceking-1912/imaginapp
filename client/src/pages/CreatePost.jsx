@@ -208,14 +208,14 @@ const CreatePost = () => {
                     </form>
                 </div>
                 <div className="col-span-8  ">
-                    <div className="lg:pl-8 grid grid-rows h-full ">
+                    <div className="lg:pl-8 grid grid-rows h-fit ">
                         <div
-                            className=' h-fit max-h-fill  relative bg-grey-50 border border-gray-300 rounded-lg text-sm focus:ring-blue-500 focus:border-blue-500 p-2 flex items-center justify-center'
+                            className='    relative bg-grey-50 border  border-gray-300 rounded-lg text-sm focus:ring-blue-500 focus:border-blue-500 p-2 flex items-center justify-center'
                         >
                             {form.photo ? (<img
                                 src={form.photo}
                                 alt={form.prompt}
-                                className=' mx-auto max-h-h-fit object-contain rounded-lg'
+                                className=' mx-auto   object-contain rounded-lg'
                             />) : (<img
                                 src={preview}
                                 alt="preview"
