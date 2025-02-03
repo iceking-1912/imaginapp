@@ -1,0 +1,28 @@
+
+my-nextjs-app/
+├── src/
+│   ├── app/
+│   │   ├── (routes)/                 # Route groups
+│   │   │   ├── home/
+│   │   │   │   └── page.js           # Home page
+│   │   │   └── dashboard/
+│   │   │       └── page.js           # Dashboard page
+│   │   ├── layout.js                 # Root layout
+│   │   └── globals.css               # Global styles
+│   ├── _components/                  # Private components folder
+│   │   ├── Card.jsx
+│   │   ├── CreatePost.jsx
+│   │   ├── FormField.jsx
+│   │   └── Loader.jsx
+│   ├── _constants/                   # Private constants
+│   │   └── index.js
+│   ├── _utils/                       # Private utility functions
+│   │   └── index.js
+│   └── _assets/                      # Private assets
+│       ├── images/
+│       └── index.js
+├── public/                           # Static public assets
+│   ├── images/
+│   └── icons/
+├── next.config.js                    # Next.js configuration
+└── package.json                      # Project dependencies
