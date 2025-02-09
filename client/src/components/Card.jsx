@@ -20,7 +20,7 @@ const Card = ({ _id, name, prompt, photo }) => {
             />
 
             <div className='group-hover:flex flex-col max-h-[70.5%] overflow-hidden
-            hidden absolute bottom-0 right-0 left-0 bg-[#0F121F] m-4 p-2
+            hidden absolute bottom-0 right-0 left-0 bg-[#0f121fdc] m-4 p-2
             rounded-md  '>
 
                 <div className=' grid grid-row-2' >
